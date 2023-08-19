@@ -1,0 +1,91 @@
+$themes: (
+  dark: (
+    black-main: #000000,
+    black-main-a25: rgba(0, 0, 0, 0.25),
+    black-900: #39393a,
+    black-800: #4a4a4a,
+    black-700: #575757,
+    black-600: #686868,
+    black-500: #777777,
+    black-200: #8c8c8c,
+    black-100: #afafaf,
+
+    gray-900: #cfcfcf,
+    gray-800: #e1e1e1,
+    gray-700: #ebebeb,
+    gray-600: #f3f3f3,
+    gray-500: #f8f8f8,
+    gray-400: #fcfcfc,
+
+    // original name: white
+    white-main: #ffffff,
+    white-alpha-5: rgba(255, 255, 255, 0.05),
+    turquoise-main: #16697a,
+    turquoise-dark: #0a5868,
+    turquoise-light: #117e95,
+
+    blue-dark: #3193b2,
+    blue-light: #56b4d1,
+
+    // original name: pink
+    pink-main: #ff8585,
+    // original name: orange
+    orange-main: #fca522,
+    // original name: yellow
+    yellow-main: #ffc700,
+    yellow-light: #ffd362,
+    // original name: green
+    green-main: #52b788,
+    green-light: #68d0a0,
+  ),
+  // TODO: light theme colors
+  light:
+    (
+      black-main: #000000,
+      black-900: #39393a,
+      black-800: #4a4a4a,
+      black-700: #575757,
+      black-600: #686868,
+      black-500: #777777,
+      black-200: #8c8c8c,
+      black-100: #afafaf,
+
+      gray-900: #cfcfcf,
+      gray-800: #e1e1e1,
+      gray-700: #ebebeb,
+      gray-600: #f3f3f3,
+      gray-500: #f8f8f8,
+      gray-400: #fcfcfc,
+
+      // original name: white
+      white-main: #ffffff,
+
+      turquoise-main: #16697a,
+      turquoise-dark: #0a5868,
+      turquoise-light: #117e95,
+
+      blue-dark: #3193b2,
+      blue-light: #56b4d1,
+
+      // original name: pink
+      pink-main: #ff8585,
+      // original name: orange
+      orange-main: #fca522,
+      // original name: yellow
+      yellow-main: #ffc700,
+      yellow-light: #ffd362,
+      // original name: green
+      green-main: #52b788,
+      green-light: #68d0a0,
+    ),
+);
+
+@mixin spread-theme-variables($theme: "dark") {
+  @each $color, $value in map-get($themes, $theme) {
+    --vkd-#{$color}: #{$value};
+  }
+}
+
+:root {
+  @include spread-theme-variables("dark");
+}

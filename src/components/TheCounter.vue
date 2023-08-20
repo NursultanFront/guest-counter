@@ -12,13 +12,17 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import useCounter from '../hooks/useCounter'
 
 interface IProps {
   isIncreaseDisabled?: boolean
   isDecreaseDisabled?: boolean
-  modelValue: number
+  modelValue: Record<string, unknown>
   min?: number
   max?: number
+  keyAnchor: string
+  keyCounter: string
+  data: Record<string, unknown>[]
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -34,37 +38,29 @@ const emit = defineEmits<{
 
 const counter = computed({
   get() {
-    return props.modelValue ?? 0
+    return props.modelValue
   },
   set(value: number) {
     return emit('update:modelValue', value)
   }
 })
+const COUNTER_VALUE = 1
 
+const { handleMinus, handlePlus, canDecrease, canIncrease } = useCounter(
+  data,
+  props.modelValue,
+  keyAnchor,
+  keyCounter
+)
 const plus = () => {
+  counter.value = handlePlus(COUNTER_VALUE)
   emit('plus')
-
-  counter.value = counter.value + 1
 }
 
 const minus = () => {
+  counter.value = handleMinus(COUNTER_VALUE)
   emit('minus')
-
-  counter.value = counter.value - 1
 }
-
-const canIncrease = computed(() => {
-  const isNumber = typeof props.max === 'number' && Number.isInteger(props.max)
-
-  // Линтер подчеркиевает props.max как возможно неопределенную переменную
-  // Хотя сверху есть явное вычисление типа, а ниже перед использованием проверка
-  // @ts-ignore
-  const isNonDefinedOrLessThenMax = !isNumber || (isNumber && counter.value < props.max)
-
-  return !props.isIncreaseDisabled && isNonDefinedOrLessThenMax
-})
-
-const canDecrease = computed(() => !props.isDecreaseDisabled && counter.value > props.min)
 </script>
 
 <style scoped lang="scss">

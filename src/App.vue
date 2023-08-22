@@ -2,13 +2,13 @@
 import TheCounter from '@/components/TheCounter.vue'
 import TheAccordion from '@/components/TheAccordion.vue'
 import { guestValues, type GuestValue } from '@/data'
-import { computed, ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 
-const data: GuestValue[] = guestValues
+const data = ref(guestValues)
 
 const guestCount = computed(() => {
-  const adults = data.find((item) => item.anchor === 'adult')?.counter
-  const children = data.find((item) => item.anchor === 'children')?.counter
+  const adults = data.value.find((item) => item.anchor === 'adult')?.counter
+  const children = data.value.find((item) => item.anchor === 'children')?.counter
 
   if (adults === 0) {
     return ''
@@ -19,6 +19,10 @@ const guestCount = computed(() => {
   if (children) result += ` + ${children} реб`
   return result.trim()
 })
+const handleCounterUpdate = (item: GuestValue, eventPayload: number) => {
+  const changedItem = data.value.find((v) => v.anchor === item.anchor)
+  if (changedItem) changedItem.counter = eventPayload
+}
 </script>
 
 <template>
@@ -30,14 +34,11 @@ const guestCount = computed(() => {
           <span class="guest-content__subtitle">{{ item.subtitle }}</span>
         </div>
         <TheCounter
-          :data="data"
-          :min=""
-          :max=""
-          :key-anchor="'anchor'"
-          :key-counter="'counter'"
-          v-model="item"
-          >{{ item.counter }}</TheCounter
-        >
+          :counter="item.counter"
+          @update="(e) => handleCounterUpdate(item, e)"
+          :min="0"
+          :max="5"
+        />
       </div>
     </div>
   </TheAccordion>

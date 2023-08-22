@@ -2,7 +2,7 @@
   <div class="counter">
     <button class="counter__button" :disabled="!canDecrease" @click="minus">-</button>
     <div class="counter__value">
-      <slot :counter="counter">
+      <slot>
         {{ counter }}
       </slot>
     </div>
@@ -17,49 +17,33 @@ import useCounter from '../hooks/useCounter'
 interface IProps {
   isIncreaseDisabled?: boolean
   isDecreaseDisabled?: boolean
-  modelValue: Record<string, unknown>
+  counter: number
+  incrementBy?: number
   min?: number
   max?: number
-  keyAnchor: string
-  keyCounter: string
-  data: Record<string, unknown>[]
 }
 
 const props = withDefaults(defineProps<IProps>(), {
   min: 0,
+  incrementBy: 1,
   isIncreaseDisabled: false,
   isDecreaseDisabled: false
 })
-const emit = defineEmits<{
-  (event: 'plus'): void
-  (event: 'minus'): void
-  (event: 'update:modelValue', value: number): void
-}>()
+const emit = defineEmits<{ (event: 'update', value: number): void }>()
 
-const counter = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value: number) {
-    return emit('update:modelValue', value)
-  }
-})
-const COUNTER_VALUE = 1
-
+const INCREMENT_BY = props.incrementBy
+const counterValue = computed(() => props.counter)
 const { handleMinus, handlePlus, canDecrease, canIncrease } = useCounter(
-  data,
-  props.modelValue,
-  keyAnchor,
-  keyCounter
+  counterValue,
+  props.max,
+  props.min
 )
 const plus = () => {
-  counter.value = handlePlus(COUNTER_VALUE)
-  emit('plus')
+  console.log(handlePlus(INCREMENT_BY))
+  emit('update', handlePlus(INCREMENT_BY))
 }
-
 const minus = () => {
-  counter.value = handleMinus(COUNTER_VALUE)
-  emit('minus')
+  emit('update', handleMinus(INCREMENT_BY))
 }
 </script>
 

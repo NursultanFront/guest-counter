@@ -1,6 +1,6 @@
-import { computed, toValue, type ComputedRef } from 'vue'
-export default function useCounter(
-  counter: number | ComputedRef<number>,
+import { computed, toValue, type WritableComputedRef } from 'vue'
+export default function useCounter<T extends WritableComputedRef<number>>(
+  counter: number | T,
   maxValue?: number,
   minValue?: number
 ) {

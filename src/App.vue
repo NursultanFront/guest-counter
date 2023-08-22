@@ -19,10 +19,6 @@ const guestCount = computed(() => {
   if (children) result += ` + ${children} реб`
   return result.trim()
 })
-const handleCounterUpdate = (item: GuestValue, eventPayload: number) => {
-  const changedItem = data.value.find((v) => v.anchor === item.anchor)
-  if (changedItem) changedItem.counter = eventPayload
-}
 </script>
 
 <template>
@@ -33,12 +29,7 @@ const handleCounterUpdate = (item: GuestValue, eventPayload: number) => {
           <span class="guest-content__title">{{ item.title }}</span>
           <span class="guest-content__subtitle">{{ item.subtitle }}</span>
         </div>
-        <TheCounter
-          :counter="item.counter"
-          @update="(e) => handleCounterUpdate(item, e)"
-          :min="0"
-          :max="5"
-        />
+        <TheCounter v-model="item.counter" :min="0" :max="5" />
       </div>
     </div>
   </TheAccordion>
